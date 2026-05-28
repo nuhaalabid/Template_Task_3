@@ -145,6 +145,7 @@ internal class Program
         Console.WriteLine();
     }
 
+    // start of assignment
     #region Dictionary
 
     // ============================================================

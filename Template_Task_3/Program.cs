@@ -156,12 +156,18 @@ internal class Program
     {
         // Exempel på hur du lägger till en produkt i dictionaryn:
         // products["KAFFE"] = new Product("KAFFE", "Kaffe", 15.00m, 50);
-        //
         // TODO:
-        // Lägg till minst 10 produkter i products-dictionaryn.
-        // Välj egna koder, namn, priser och lagersaldon.
 
-
+        products["KAFFE"] = new Product("KAFFE", "Kaffe", 15.00m, 50);
+        products["TE"] = new Product("TE", "Te", 12.00m, 40);
+        products["MJOLK"] = new Product("MJOLK", "Mjölk", 18.50m, 30);
+        products["BROD"] = new Product("BROD", "Bröd", 25.00m, 20);
+        products["SMOR"] = new Product("SMOR", "Smör", 35.00m, 15);
+        products["OST"] = new Product("OST", "Ost", 45.00m, 10);
+        products["AGG"] = new Product("AGG", "Ägg", 32.00m, 25);
+        products["RIS"] = new Product("RIS", "Ris", 28.00m, 18);
+        products["PASTA"] = new Product("PASTA", "Pasta", 22.00m, 35);
+        products["SOCKER"] = new Product("SOCKER", "Socker", 19.00m, 12);
     }
 
     static void PrintProducts()
@@ -174,64 +180,94 @@ internal class Program
         // Räkna även ut totalt lagervärde.
         // Lagervärde för en produkt:
         // product.Price * product.Stock
+        decimal totalValue = 0;
 
+        foreach (KeyValuePair<string, Product> pair in products)
+        {
+            Product product = pair.Value;
+            Console.WriteLine(product);
+
+            totalValue += product.Price * product.Stock;
+        }
+        Console.WriteLine($"Totalt lagervärde: {totalValue} kr");
 
         // Fråga:
         // Varför passar Dictionary bra för ett produktregister?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        //Svara: Dictionary passar bra för ett produktregister eftersom man snabbt kan
+        // hitta en produkt med hjälp av produktkoden.
     }
 
     static void FindProduct()
     {
         Console.Write("Ange produktkod: ");
-        
+        string code = Console.ReadLine().ToUpper();
 
-        // TODO:
-        // Hämta produktens code
-        // Gör koden till stora bokstäver med .ToUpper()
-        // Slå upp produkten med TryGetValue
-        // Om produkten finns, skriv ut den.
-        // Om produkten saknas, skriv ett felmeddelande.
-
-        Console.WriteLine("TODO: Implementera FindProduct.");
+        if (products.TryGetValue(code, out Product product))
+        {
+            Console.WriteLine(product);
+        }
+        else
+        {
+            Console.WriteLine("Produkten hittades inte.");
+        }
 
         // Fråga:
         // Varför är TryGetValue bättre än att skriva products[code] direkt?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        // Svara:TryGetValue är säkrare eftersom programmet inte kraschar om koden
+        // inte finns. Metoden returnerar false istället.
     }
 
     static void AddProduct()
     {
-        Console.WriteLine("TODO: Implementera AddProduct.");
-      
-        // TODO:
-        // Läs in produktkod.
-        // Gör produktkoden till stora bokstäver med .ToUpper().
-        // Kontrollera om koden redan finns i products — skriv felmeddelande om den gör det.
-        // Läs in namn.
-        // Läs in pris (använd InputHelpers.ReadDecimal).
-        // Läs in lagersaldo (använd InputHelpers.ReadInt).
-        // Skapa ett Product-objekt.
-        // Lägg till produkten i products-dictionaryn.
-        // Lägg till ett loggmeddelande i logMessages.
+        Console.WriteLine("Ange produktkod");
+
+        string code = Console.ReadLine().ToUpper();
+
+        if (products.ContainsKey(code))
+        {
+            Console.WriteLine("Produkten finns redan.");
+            return;
+        }
+
+        Console.Write("Ange namn: ");
+        string name = Console.ReadLine();
+
+        decimal price = InputHelpers.ReadDecimal("Ange pris: ");
+        int stock = InputHelpers.ReadInt("Ange lagersaldo: ");
+
+        Product product = new Product(code, name, price, stock);
+
+        products.Add(code, product);
+
+        logMessages.Add($"Produkt tillagd: {code} - {name}");
+
+        Console.WriteLine("Produkten har lagts till.");
 
         // Fråga:
         // Vad är nyckeln och vad är värdet i products?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+       // Svara:Nyckeln är produktkoden (code) och värdet är Product-objektet (product).
     }
 
     static void ChangeStock()
     {
-        Console.WriteLine("TODO: Implementera ChangeStock.");
+        Console.WriteLine("Ange produktkod");
         // TODO:
-        // Läs in produktkod.
-        // Slå upp produkten med TryGetValue.
-        // Läs in nytt lagersaldo från användaren.
-        // Validera
-        // Ändra produktens Stock. Validera även i product
-        // 
-        // Logga ändringen.
+        string code = Console.ReadLine().ToUpper();
 
+        if (products.TryGetValue(code, out Product product))
+        {
+            int newStock = InputHelpers.ReadInt("Ange nytt lagersaldo: ");
+
+            product.Stock = newStock;
+
+            logMessages.Add($"Lagersaldo ändrat för {code}. Nytt saldo: {newStock}");
+
+            Console.WriteLine("Lagersaldo uppdaterat.");
+        }
+        else
+        {
+            Console.WriteLine("Produkten hittades inte.");
+        }
     }
 
     static decimal GetPriceBad(string code)
@@ -261,19 +297,25 @@ internal class Program
     static decimal GetPriceBetter(string code)
     {
         // TODO:
-        // Skriv om GetPriceBad med en lokal Dictionary istället för if/else.
-        // Samma fyra produkter och priser som i GetPriceBad ska finnas.
-        // Använd TryGetValue för att slå upp priset.
-        // Returnera priset om koden finns, annars -1.
-        //
-        // Jämför sedan de två metoderna — vad händer om du behöver lägga till
-        // en femte produkt? Vilken metod är enklare att utöka?
+        Dictionary<string, decimal> prices = new()
+    {
+        { "KAF", 15 },
+        { "TE", 12 },
+        { "BUL", 18 },
+        { "MCK", 35 }
+    };
+
+        if (prices.TryGetValue(code.ToUpper(), out decimal price))
+        {
+            Console.WriteLine($"pris:{price} kr");
+            return price;
+        }
+        return -1;
 
         // Fråga:
         // Varför är Dictionary-lösningen bättre än många if/else-satser?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
-
-        return -1;
+       // Svara:Dictionary är bättre eftersom den är enklare att utöka,
+       // ger snabbare sökningar och gör koden renare.    
     }
 
     #endregion

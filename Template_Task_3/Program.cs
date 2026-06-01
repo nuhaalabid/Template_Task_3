@@ -328,39 +328,48 @@ internal class Program
 
     static void AddCustomerToQueue()
     {
-        Console.WriteLine("TODO: Implementera AddCustomerToQueue.");
-        
-        // TODO:
-        // Läs in kundens namn (använd InputHelpers.ReadString).
-        // Skapa ett Customer-objekt med namnet.
-        // Lägg kunden i customerQueue med Enqueue.
-        // Skriv ut att kunden lagts till och vilken plats i kön de har.
-        // Lägg till ett loggmeddelande i logMessages.
+        Console.WriteLine("Registrera ny kund");
 
-        // Fråga:
-        // Vad betyder FIFO?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        // TODO:
+        string name = InputHelpers.ReadString("Ange kundens namn: ");
+
+        Customer customer = new Customer(name);
+
+        customerQueue.Enqueue(customer);
+
+        Console.WriteLine($"Kunden lades till. Plats i kön: {customerQueue.Count}");
+
+        logMessages.Add($"Kund tillagd i kön: {name}");
+        // Fråga: Vad betyder FIFO?
+        // Svara:FIFO betyder First In, First Out.
+        // Den kund som kommer först i kön blir också betjänad först.
     }
 
     static void ServeNextCustomer()
     {
-        Console.WriteLine("TODO: Implementera ServeNextCustomer.");
-        
-        // TODO:
-        // Kontrollera om customerQueue är tom — skriv meddelande om den är det.
-        // Om den inte är tom:
-        // Använd Dequeue för att ta bort och hämta den första kunden.
-        // Skriv ut vilken kund som blev betjänad.
-        // Lägg till ett loggmeddelande i logMessages.
+        Console.WriteLine("Betjäna nästa kund");
 
-        // Fråga:
-        // Varför passar Queue bättre än Stack för en kundkö?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        if (customerQueue.Count == 0)
+        {
+            Console.WriteLine("Kön är tom.");
+            return;
+        }
+
+        Customer customer = customerQueue.Dequeue();
+
+        Console.WriteLine($"Kund betjänad: {customer.Name}");
+
+        logMessages.Add($"Kund betjänad: {customer.Name}");
+
+        // Fråga:Varför passar Queue bättre än Stack för en kundkö?
+        // Svara:Queue passar bättre eftersom den använder FIFO
+        // First In, First Out. Den kund som kommer först
+        // blir också betjänad först.
     }
 
     static void PrintCustomerQueue()
     {
-        Console.WriteLine("=== Kundkö ===");
+        Console.WriteLine("==Kundkö ==");
 
         // TODO:
         // Om customerQueue är tom, skriv att kön är tom.
@@ -373,9 +382,21 @@ internal class Program
         // 3. Stina (2026-05-26 10:03)
         //
         // Tips: foreach fungerar på Queue utan att ta bort elementen.
+        if (customerQueue.Count == 0)
+        {
+            Console.WriteLine("Kön är tom.");
+            return;
+        }
 
-        Console.WriteLine("TODO: Implementera PrintCustomerQueue.");
+        int place = 1;
+
+        foreach (Customer customer in customerQueue)
+        {
+            Console.WriteLine($"{place}. {customer}");
+            place++;
+        }
     }
+
 
     #endregion
 

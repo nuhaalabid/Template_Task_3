@@ -423,16 +423,50 @@ internal class Program
         // Bestäm om kunden ska tas bort från kön efter köp eller inte.
         // Motivera ditt val i kommentar.
 
-        Console.WriteLine("TODO: Implementera SellProduct.");
+        //Svara:Jag väljer att inte ta bort kunden från kön efter köp.
+        // Kunden kan då köpa flera produkter innan den betjänas klart.
 
-        // Fråga:
-        // Varför sparar vi försäljningar i en Stack?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        if (customerQueue.Count == 0)
+        {
+            Console.WriteLine("Det finns ingen kund i kön.");
+            return;
+        }
+
+        Customer customer = customerQueue.Peek();
+
+        Console.Write("Ange produktkod: ");
+        string code = Console.ReadLine().ToUpper();
+
+        if (!products.TryGetValue(code, out Product product))
+        {
+            Console.WriteLine("Produkten hittades inte.");
+            return;
+        }
+
+        if (product.Stock <= 0)
+        {
+            Console.WriteLine("Produkten finns inte i lager.");
+            return;
+        }
+
+        product.Stock--;
+
+        Sale sale = new Sale(product.Code, product.Name, product.Price, customer.Name);
+
+        saleHistory.Push(sale);
+
+        logMessages.Add($"Försäljning: {product.Name} såldes till {customer.Name}");
+
+        Console.WriteLine($"{product.Name} såldes till {customer.Name}.");
+
+        //Fråga: Varför sparar vi försäljningar i en Stack?
+       //Svar:Vi sparar försäljningar i en Stack eftersom Stack använder LIFO.
+       // Då kan vi enkelt ångra den senaste försäljningen först.
     }
 
     static void UndoLastSale()
     {
-        Console.WriteLine("TODO: Implementera UndoLastSale.");
+        Console.WriteLine("Ångra senaste försäljning ");
 
         // TODO:
         // Kontrollera om saleHistory är tom — skriv meddelande om den är det.
@@ -442,20 +476,54 @@ internal class Program
         // Öka produktens Stock med 1.
         // Logga vad som ångrades i logMessages.
 
+        if (saleHistory.Count == 0)
+        {
+            Console.WriteLine("Det finns inga försäljningar att ångra.");
+            return;
+        }
+
+        Sale sale = saleHistory.Pop();
+
+        if (products.TryGetValue(sale.ProductCode, out Product product))
+        {
+            product.Stock++;
+
+            Console.WriteLine($"Försäljningen av {product.Name} har ångrats.");
+
+            logMessages.Add($"Ångrad försäljning: {product.Name}");
+        }
+
         // Fråga:
         // Vad betyder LIFO?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        // Svar:LIFO betyder Last In, First Out.
+        // Den senaste försäljningen som lades i stacken tas bort först.
     }
 
     static void ReverseTextLab()
     {
-        Console.WriteLine("=== Stack-labb: vänd text ===");
-        Console.WriteLine("TODO: Implementera ReverseTextLab.");
+        Console.WriteLine("==Stack-labb: vänd text =");
+        Console.Write("Ange en text: ");
+        string text = Console.ReadLine();
+
+        Stack<char> chars = new Stack<char>();
+
+        foreach (char c in text)
+        {
+            chars.Push(c);
+        }
+
+        while (chars.Count > 0)
+        {
+            Console.Write(chars.Pop());
+        }
+
+        Console.WriteLine();
+    }
 
         // TODO:
         // Läs in en text från användaren.
         // Skriv ut texten bakofram använd en lämplig collektion.
-    }
+    
 
     #endregion
 
@@ -473,11 +541,21 @@ internal class Program
         // Om logMessages är tom, skriv "Inga loggmeddelanden finns."
         // Annars: loopa igenom logMessages och skriv ut varje meddelande.
 
-        Console.WriteLine("TODO: Implementera PrintLog.");
+        if (logMessages.Count == 0)
+        {
+            Console.WriteLine("Inga loggmeddelanden finns.");
+            return;
+        }
+
+        foreach (string message in logMessages)
+        {
+            Console.WriteLine(message);
+        }
 
         // Fråga:
         // Varför passar List bra för loggmeddelanden?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        // Svar: List passar bra för loggmeddelanden eftersom nya meddelanden
+        // enkelt kan läggas till i slutet och visas i ordning.
     }
 
     static void ListLab()

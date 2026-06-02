@@ -686,7 +686,7 @@ internal class Program
         Console.WriteLine("=== Dictionary-labb: räkna ord ===");
 
         Console.WriteLine("Skriv en mening:");
-        string text = ReadLine;
+        string text = Console.ReadLine();
 
         //ToDo: Skriv koden för CountWords
         Dictionary<string, int> wordCounts = CountWords(text);
@@ -700,27 +700,37 @@ internal class Program
 
         // Fråga:
         // Varför passar Dictionary bra när vi ska räkna ord?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        // Svar:Dictionary passar bra eftersom ordet kan vara nyckeln
+        // och antalet förekomster kan vara värdet.
     }
 
     static Dictionary<string, int> CountWords(string text)
     {
         Dictionary<string, int> wordCounts = new Dictionary<string, int>();
 
-        // TODO:
-        // Dela upp text i ord med string.Split.
-        // Separera på: mellanslag (ett eller flera), punkt, !, ?, :, ;
-        // Tips: string[] words = text.Split(new char[] { ' ', '.', '!', '?', ':', ';' },
-        //                                   StringSplitOptions.RemoveEmptyEntries);
-        //
-        // Loopa igenom orden.
-        // Gör varje ord till gemener med .ToLower() så att "Hej" och "hej" räknas som samma.
-        // Om ordet redan finns i wordCounts → öka värdet med 1.
-        // Annars → lägg till ordet med värdet 1.
+        // TODO
+
+        string[] words = text.Split(
+            new char[] { ' ', '.', '!', '?', ':', ';' },
+            StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (string word in words)
+        {
+            string lowerWord = word.ToLower();
+
+            if (wordCounts.ContainsKey(lowerWord))
+            {
+                wordCounts[lowerWord]++;
+            }
+            else
+            {
+                wordCounts[lowerWord] = 1;
+            }
+        }
 
         // Fråga:
         // Vad är nyckeln och vad är värdet i wordCounts?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
+        //Svar:Nyckeln är ordet och värdet är hur många gånger ordet förekommer.
 
         return wordCounts;
     }
@@ -762,23 +772,51 @@ internal class Program
 
     static bool CheckParentheses(string text)
     {
-        // TODO:
-        // Använd en Stack<char> och en Dictionary<char, char>.
-        //
-        // Tips Dictionary:
-        // Låt dictionaryn mappa varje stängande parentes till sin matchande öppnare.
-        // Det gör matchningskontrollen till en enkel uppslagning istället för flera if-satser.
-        //
-        // Tips Stack:
-        // Stacken håller reda på vilka öppnare du sett men ännu inte stängt.
-        // Tänk på vad LIFO innebär här — varför är det precis rätt egenskap för det här problemet?
-        //
-        // Fråga:
-        // Varför är Dictionary + Stack bättre än bara Stack med if/else för matchningen?
-        Console.WriteLine("Svar: TODO - skriv ditt svar här");
 
-        return false;
+        // TODO:
+
+        Stack<char> stack = new Stack<char>();
+
+        Dictionary<char, char> matching = new Dictionary<char, char>()
+    {
+        { ')', '(' },
+        { ']', '[' },
+        { '}', '{' }
+    };
+
+        foreach (char c in text)
+        {
+            if (c == '(' || c == '[' || c == '{')
+            {
+                stack.Push(c);
+            }
+            else if (matching.ContainsKey(c))
+            {
+                if (stack.Count == 0)
+                {
+                    return false;
+                }
+
+                char lastOpen = stack.Pop();
+
+                if (lastOpen != matching[c])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return stack.Count == 0;
     }
+
+    // Svar:
+    // Dictionary gör det enkelt att hitta vilken öppnande parentes
+    // som hör ihop med en stängande parentes.
+    // Stack passar eftersom den senaste öppnade parentesen
+    // måste stängas först.
+
+
+
 
     // ============================================================
     // DEL 8 - STACKEN OCH HEAPEN
@@ -831,31 +869,34 @@ internal class Program
 
         // Fråga 1:
         // Varför ändras inte number1 när number2 ändras?
-        Console.WriteLine("Svar 1: TODO - skriv ditt svar här");
+        // Svar 1:number1 ändras inte eftersom int är en value type.
+        // number2 får en egen kopia av värdet.
 
         // Fråga 2:
         // Varför ändras inte score1.Points när score2.Points ändras?
-        Console.WriteLine("Svar 2: TODO - skriv ditt svar här");
+        // Svar 2: ScoreValue är en struct och därför en value type.
+        // score2 får en kopia av score1, så score1 påverkas inte.
 
         // Fråga 3:
         // Varför ändras product1.Stock när product2.Stock ändras?
-        Console.WriteLine("Svar 3: TODO - skriv ditt svar här");
+        //Svar: Product är en class och därför en reference type.
+        // product1 och product2 pekar på samma objekt, så ändringen syns via båda.
 
         // Fråga 4:
         // Är Product en value type eller reference type?
-        Console.WriteLine("Svar 4: TODO - skriv ditt svar här");
+        // Svar 4:Product är en reference type eftersom det är en class.
 
         // Fråga 5:
         // Vad ligger på heapen i Product-exemplet?
-        Console.WriteLine("Svar 5: TODO - skriv ditt svar här");
+        // Svar 5:Själva Product-objektet ligger på heapen.
 
         // Fråga 6:
         // Vad innebär det att två variabler kan peka på samma objekt?
-        Console.WriteLine("Svar 6: TODO - skriv ditt svar här");
+        // Svar 6:Båda variablerna pekar på samma objekt.
 
         // Fråga 7:
         // Vad är skillnaden mellan stacken i minnet och Stack<T> som datastruktur?
-        Console.WriteLine("Svar 7: TODO - skriv ditt svar här");
+        // Svar 7: Stacken är minne, Stack<T> är en datastruktur.
     }
 
     #endregion

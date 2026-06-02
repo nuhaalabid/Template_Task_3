@@ -644,19 +644,33 @@ internal class Program
         // TODO:
         // Skriv ut alla veckodagar med foreach.
 
-        Console.WriteLine("TODO: Implementera utskrifter i ArrayLab.");
+
+        Console.WriteLine("\nFor-loop:");
+
+        for (int i = 0; i < weekdays.Length; i++)
+        {
+            Console.WriteLine(weekdays[i]);
+        }
+
+        Console.WriteLine("\nForeach:");
+
+        foreach (string day in weekdays)
+        {
+            Console.WriteLine(day);
+        }
 
         // Fråga 1:
         // När passar en array bättre än en List?
-        Console.WriteLine("Svar 1: TODO - skriv ditt svar här");
+        // Svar 1:En array passar bra när storleken inte behöver ändras.
+
 
         // Fråga 2:
         // Vad händer om du försöker skriva weekdays[5]?
-        Console.WriteLine("Svar 2: TODO - skriv ditt svar här");
+        //Svar 2: Programmet ger ett fel eftersom index 5 inte finns i arrayen.
 
         // Fråga 3:
         // Varför måste arrayens storlek anges från början?
-        Console.WriteLine("Svar 3: TODO - skriv ditt svar här");
+        // Svar 3:Storleken måste bestämmas från början eftersom den inte kan ändras senare.
     }
 
     #endregion
